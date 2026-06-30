@@ -1,2 +1,8 @@
 theme: jekyll-theme-minimal
-title: Hiring Trends Dashboard
+plugins:
+  - jekyll-relative-links
+relative_links:
+  enabled: true
+  collections: true
+include:
+  - "*.html"
