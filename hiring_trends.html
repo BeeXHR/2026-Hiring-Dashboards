@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hiring Trends — BeeX</title>
+<style>
+  :root{
+    --bg:#fff;--surface:#f7f7f5;--text:#1f1f1d;--muted:#6b6b66;--hint:#9a9a94;--border:rgba(0,0,0,.1);
+    --accent:#6358CE;--accent2:#02C39A;--grid:rgba(0,0,0,.07);
+    --b0:#CECBF6;--b1:#AFA9EC;--b2:#7F77DD;--b3:#6358CE;--b4:#534AB7;--b5:#473DA0;--b6:#3C3489;--b7:#26215C;--bt:#26215C;
+  }
+  @media(prefers-color-scheme:dark){:root{--bg:#1a1a18;--surface:#232321;--text:#ececea;--muted:#a7a7a1;--hint:#7a7a74;--border:rgba(255,255,255,.12);--grid:rgba(255,255,255,.08);--bt:#fff;}}
+  *{box-sizing:border-box}
+  body{margin:0;padding:20px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text)}
+  .wrap{max-width:980px;margin:0 auto}
+  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:22px}
+  label{font-size:13px;color:var(--muted)}
+  select{height:36px;padding:0 10px;font-size:14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);min-width:200px}
+  h2{font-size:15px;font-weight:600;margin:30px 0 12px;letter-spacing:.01em}
+  h2:first-of-type{margin-top:8px}
+  .card{background:var(--surface);border-radius:12px;padding:18px 18px 20px}
+  /* trend table */
+  table{border-collapse:collapse;width:100%;font-size:13px}
+  th,td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--border);white-space:nowrap}
+  th:first-child,td:first-child{text-align:left;color:var(--muted)}
+  thead th{color:var(--muted);font-weight:600;border-bottom:1px solid var(--border)}
+  .delta{font-size:11px;margin-left:4px}
+  .up{color:#16a34a}.down{color:#dc2626}.flat{color:var(--hint)}
+  /* funnel */
+  .row{display:flex;align-items:center;gap:12px;margin-bottom:7px}
+  .lab{width:150px;font-size:13px;color:var(--muted);text-align:right;flex-shrink:0}
+  .track{flex:1;display:flex;align-items:center;gap:8px}
+  .bar{height:30px;border-radius:7px;display:flex;align-items:center;padding:0 10px;color:var(--bt);font-size:13px;font-weight:500;min-width:30px;transition:width .3s;white-space:nowrap}
+  .conv{font-size:12px;color:var(--hint)}
+  .funhead{display:flex;gap:10px;align-items:center;margin-bottom:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="controls">
+    <label for="pos">Position</label>
+    <select id="pos"></select>
+    <label for="metric" style="margin-left:8px">Trend metric</label>
+    <select id="metric"></select>
+  </div>
+
+  <h2 id="trendTitle">Trend over time</h2>
+  <div class="card"><div id="lineChart"></div></div>
+
+  <h2>Monthly table</h2>
+  <div class="card" style="overflow-x:auto"><div id="trendTable"></div></div>
+
+  <h2>Funnel</h2>
+  <div class="card">
+    <div class="funhead">
+      <label for="funMonth">Month</label>
+      <select id="funMonth"></select>
+    </div>
+    <div id="funnel"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   ↓↓↓  EDIT ONLY THIS BLOCK  ↓↓↓
+
+   The whole timeline (Apr 2026 → Dec 2026) is laid out below.
+   Months you haven't tracked yet have:  data: null
+   They show as empty/gaps until you fill them.
+
+   TO FILL A MONTH:
+   Replace its  data: null  with a data:{...} block of positions,
+   copying the structure from June below. Each position's 8 numbers,
+   in order, straight from your ClickUp table row:
+   [ Applied, Resume Screened, Reached Out, HR Interview,
+     Technical Assignment, Technical Interview, Culture Fit, Offered ]
+
+   TO ADD A YEAR LATER: copy a line and change the month name.
+   ============================================================ */
+
+const MONTHS = [
+  {
+    month: "April 2026",
+    data: {
+      "Mechatronics Engineer":      [20, 20,  7,  8,  3,  0,  0,  0],
+      "Mechanical Engineer":        [26, 26,  0,  0,  1,  0,  0,  0],
+      "Electrical Engineer":        [26, 22,  3,  2,  3,  1,  0,  0],
+      "Robotics Automation (RASE)": [30, 30,  8,  4,  4,  0,  0,  0],
+      "Research Fellow (RF)":       [ 2,  2,  1,  1,  0,  0,  0,  0],
+      "Sales Engineer":             [20, 20,  8, 12, 10,  2,  1,  0],
+      "Project Engineer (Defense)": [27, 27, 11,  6,  3,  2,  1,  0],
+      "Operations Tech (Ops)":      [64, 64,  9,  6,  2,  2,  0,  0],
+      "Production Tech (Prod)":     [59, 49,  0,  0,  0,  0,  0,  0],
+      "Business Ops Intern":        [21, 21,  2,  3,  2,  1,  0,  0],
+      "Industrial Design Intern":   [46, 46, 11, 10,  5,  2,  0,  1],
+      "Electrical Intern":          [45, 43, 14, 15,  7,  2,  0,  1],
+      "Mechanical Intern":          [56, 56, 13, 11,  6,  0,  0,  0],
+      "Software Intern":            [24, 24, 15,  7,  7,  1,  0,  0],
+      "PM Intern":                  [13, 13,  8,  8,  4,  3,  0,  1]
+    }
+  },
+  {
+    month: "May 2026",
+    data: {
+      "Mechatronics Engineer":      [14, 14,  4,  6,  4,  0,  0,  0],
+      "Mechanical Engineer":        [ 0,  0,  0,  0,  0,  0,  0,  0],
+      "Electrical Engineer":        [36, 36,  9,  7,  2,  2,  0,  0],
+      "Robotics Automation (RASE)": [15, 12, 10, 12,  7,  4,  0,  0],
+      "Research Fellow (RF)":       [ 5,  5,  2,  2,  2,  0,  0,  0],
+      "Sales Engineer":             [26, 26, 10,  9,  5,  0,  1,  0],
+      "Sales Engineer (MY)":        [17, 17,  5,  5,  3,  0,  2,  0],
+      "Project Engineer (Defense)": [27, 27,  6,  6,  3,  4,  1,  0],
+      "Operations Tech (Ops)":      [33, 33, 21, 17,  0, 10,  0,  1],
+      "Production Tech (Prod)":     [41, 41,  2,  2,  0,  1,  0,  0],
+      "Senior Production Tech":     [ 2,  2,  0,  0,  0,  0,  0,  0],
+      "Business Ops Intern":        [15, 15,  6,  9,  4,  1,  0,  0],
+      "Industrial Design Intern":   [21, 21,  7,  6,  3,  1,  0,  1],
+      "Software Intern":            [14, 14,  6,  3,  2,  1,  0,  0],
+      "PM Intern":                  [10, 10,  3,  4,  2,  2,  0,  0],
+      "Mechanical Intern":          [36, 36,  5,  8,  4,  0,  0,  0],
+      "Electrical Intern":          [15,  3,  0,  1,  1,  0,  0,  1],
+      "Admin Executive":            [58, 58, 25,  5,  5,  1,  0,  1],
+      "Engineering Support Tech":   [42, 42,  9,  4,  0,  3,  0,  1]
+    }
+  },
+  {
+    month: "June 2026",
+    data: {
+      "Mechatronics Engineer":      [23, 23,  2,  3,  2,  0,  0,  0],
+      "Mechanical Engineer":        [ 0,  0,  0,  0,  0,  0,  0,  0],
+      "Electrical Engineer":        [46, 45, 11,  9,  7,  2,  0,  1],
+      "Robotics Automation (RASE)": [15,  9,  3,  5,  3,  0,  0,  0],
+      "Research Fellow (RF)":       [11, 11,  3,  3,  2,  0,  0,  0],
+      "Sales Engineer":             [16, 16,  5,  2,  1,  1,  1,  1],
+      "Project Engineer (Defense)": [30, 28,  7,  2,  2,  1,  0,  1],
+      "Operations Tech (Ops)":      [93, 91, 13,  8,  5,  0,  0,  0],
+      "Production Tech (Prod)":     [86, 84, 23, 11,  5,  0,  0,  0],
+      "Business Ops Intern":        [ 8,  8,  5,  2,  0,  1,  0,  0],
+      "Industrial Design Intern":   [ 8,  8,  3,  2,  0,  0,  0,  0],
+      "Electrical Intern":          [11,  0,  0,  0,  0,  0,  0,  0],
+      "Mechanical Intern":          [21, 21,  6,  1,  0,  0,  0,  0],
+      "Software Intern":            [15, 15,  5,  1,  0,  0,  0,  0],
+      "PM Intern":                  [ 5,  5,  1,  1,  1,  1,  0,  1]
+    }
+  },
+  { month: "July 2026",      data: null },
+  { month: "August 2026",    data: null },
+  { month: "September 2026", data: null },
+  { month: "October 2026",   data: null },
+  { month: "November 2026",  data: null },
+  { month: "December 2026",  data: null }
+];
+
+/* ↑↑↑  EDIT ONLY THE BLOCK ABOVE  ↑↑↑  */
+/* ============================================================ */
+
+const stageLabels=["Applied","Resume Screened","Reached Out","HR Interview","Technical Assignment","Technical Interview","Culture Fit","Offered"];
+const barVars=["--b0","--b1","--b2","--b3","--b4","--b5","--b6","--b7"];
+
+// positions = union of all positions across months that have data
+const positions = (()=>{const s=new Set();MONTHS.forEach(m=>{if(m.data)Object.keys(m.data).forEach(p=>s.add(p));});return [...s];})();
+
+// returns the metric vector for a month, or null if that month has no data
+function vecFor(monthObj, pos){
+  if(!monthObj.data) return null;
+  if(pos==="__all__"){
+    const sum=[0,0,0,0,0,0,0,0];
+    for(const k in monthObj.data) monthObj.data[k].forEach((v,i)=>sum[i]+=v);
+    return sum;
+  }
+  return monthObj.data[pos] || [0,0,0,0,0,0,0,0];
+}
+
+const posSel=document.getElementById("pos");
+posSel.innerHTML='<option value="__all__">All positions (combined)</option>'+positions.map(p=>'<option value="'+p+'">'+p+'</option>').join("");
+
+const metricSel=document.getElementById("metric");
+metricSel.innerHTML=stageLabels.map((s,i)=>'<option value="'+i+'">'+s+'</option>').join("")+'<option value="yield">Yield % (offer÷applied)</option>';
+
+const funMonthSel=document.getElementById("funMonth");
+funMonthSel.innerHTML=MONTHS.map((m,i)=>'<option value="'+i+'"'+(m.data?"":" disabled")+'>'+m.month+(m.data?"":" (no data)")+'</option>').join("");
+// default to the latest month that actually has data
+const lastWithData=(()=>{for(let i=MONTHS.length-1;i>=0;i--){if(MONTHS[i].data)return i;}return 0;})();
+funMonthSel.value=lastWithData;
+
+function metricValue(vec,metric){
+  if(vec===null) return null;
+  if(metric==="yield"){return vec[0]?+( (vec[7]/vec[0])*100 ).toFixed(1):0;}
+  return vec[+metric];
+}
+
+/* ---------- line chart (SVG) ---------- */
+function drawLine(pos,metric){
+  const W=900,H=260,padL=44,padR=20,padT=18,padB=40;
+  const pts=MONTHS.map(m=>metricValue(vecFor(m,pos),metric)); // null where no data
+  const filled=pts.filter(v=>v!==null);
+  const max=Math.max(...filled,1);
+  const n=pts.length;
+  const xstep=n>1?(W-padL-padR)/(n-1):0;
+  const x=i=>padL+i*xstep;
+  const y=v=>padT+(H-padT-padB)*(1-v/max);
+  let grid="";
+  for(let g=0;g<=4;g++){const gy=padT+(H-padT-padB)*g/4;const gv=Math.round(max*(1-g/4));grid+='<line x1="'+padL+'" y1="'+gy+'" x2="'+(W-padR)+'" y2="'+gy+'" stroke="var(--grid)"/><text x="'+(padL-8)+'" y="'+(gy+4)+'" font-size="11" fill="var(--hint)" text-anchor="end">'+gv+'</text>';}
+  // build path only across months that have data (connect across gaps)
+  let path="",dots="",labels="",started=false;
+  pts.forEach((v,i)=>{
+    labels+='<text x="'+x(i)+'" y="'+(H-padB+20)+'" font-size="10" fill="'+(v===null?"var(--hint)":"var(--muted)")+'" text-anchor="middle">'+MONTHS[i].month.replace(" 20"," '")+'</text>';
+    if(v===null) return;
+    const px=x(i),py=y(v);
+    path+=(started?"L":"M")+px+" "+py+" ";started=true;
+    dots+='<circle cx="'+px+'" cy="'+py+'" r="4" fill="var(--accent)"/><text x="'+px+'" y="'+(py-10)+'" font-size="11" fill="var(--text)" text-anchor="middle">'+v+(metric==="yield"?"%":"")+'</text>';
+  });
+  const note = filled.length<2 ? '<p style="text-align:center;color:var(--hint);font-size:13px;margin:10px 0 0">'+(filled.length===0?"No data yet — fill a month in the data block.":"One month so far. Add another to see the trend line.")+'</p>' : '';
+  document.getElementById("lineChart").innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto">'+grid+'<path d="'+path+'" fill="none" stroke="var(--accent)" stroke-width="2.5"/>'+dots+labels+'</svg>'+note;
+}
+
+/* ---------- trend table ---------- */
+function drawTable(pos){
+  let head='<tr><th>Stage</th>'+MONTHS.map(m=>'<th'+(m.data?"":' style="color:var(--hint)"')+'>'+m.month.replace(" 20"," '")+'</th>').join("")+'</tr>';
+  let rows="";
+  const allRows=[...stageLabels.map((s,i)=>({label:s,metric:i})),{label:"Yield %",metric:"yield"}];
+  allRows.forEach(r=>{
+    let cells="";
+    MONTHS.forEach((m,mi)=>{
+      const v=metricValue(vecFor(m,pos),r.metric);
+      if(v===null){cells+='<td style="color:var(--hint)">·</td>';return;}
+      // find most recent prior month with data
+      let prev=null;
+      for(let j=mi-1;j>=0;j--){const pv=metricValue(vecFor(MONTHS[j],pos),r.metric);if(pv!==null){prev=pv;break;}}
+      let delta="";
+      if(prev!==null){const d=v-prev;const cls=d>0?"up":d<0?"down":"flat";const arrow=d>0?"▲":d<0?"▼":"–";delta=' <span class="delta '+cls+'">'+arrow+(d!==0?Math.abs(+d.toFixed(1)):"")+'</span>';}
+      cells+='<td>'+v+(r.metric==="yield"?"%":"")+delta+'</td>';
+    });
+    rows+='<tr><td>'+r.label+'</td>'+cells+'</tr>';
+  });
+  document.getElementById("trendTable").innerHTML='<table>'+head+rows+'</table>';
+}
+
+/* ---------- funnel ---------- */
+function drawFunnel(pos,monthIdx){
+  const vals=vecFor(MONTHS[monthIdx],pos);
+  const f=document.getElementById("funnel");
+  if(vals===null){f.innerHTML='<p style="color:var(--hint);font-size:13px;margin:4px 0">No data for '+MONTHS[monthIdx].month+' yet.</p>';return;}
+  const max=Math.max(...vals,1);
+  f.innerHTML="";
+  vals.forEach((v,i)=>{
+    const pct=(v/max)*100;const prev=i===0?null:vals[i-1];const conv=prev?Math.round((v/prev)*100):null;
+    const row=document.createElement("div");row.className="row";
+    row.innerHTML='<div class="lab">'+stageLabels[i]+'</div><div class="track"><div class="bar" style="width:'+Math.max(pct,3)+'%;background:var('+barVars[i]+')">'+v+'</div>'+(conv!==null?'<span class="conv">'+conv+'%</span>':'<span class="conv">—</span>')+'</div>';
+    f.appendChild(row);
+  });
+}
+
+function refresh(){
+  const pos=posSel.value, metric=metricSel.value;
+  const metricName = metric==="yield" ? "Yield %" : stageLabels[+metric];
+  document.getElementById("trendTitle").textContent="Trend over time — "+metricName;
+  drawLine(pos,metric);
+  drawTable(pos);
+  drawFunnel(pos, +funMonthSel.value);
+}
+posSel.addEventListener("change",refresh);
+metricSel.addEventListener("change",()=>{drawLine(posSel.value,metricSel.value);});
+funMonthSel.addEventListener("change",()=>drawFunnel(posSel.value,+funMonthSel.value));
+metricSel.value="7"; // default to Offered
+refresh();
+</script>
+</body>
+</html>
