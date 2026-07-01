@@ -127,20 +127,24 @@ const MONTHS = [
   {
     month: "June 2026",
     data: {
-      "Mechatronics Engineer":      [23, 23,  2,  3,  2,  0,  0,  0],
-      "Mechanical Engineer":        [ 0,  0,  0,  0,  0,  0,  0,  0],
-      "Electrical Engineer":        [46, 45, 11,  9,  7,  2,  0,  1],
-      "Robotics Automation (RASE)": [15,  9,  3,  5,  3,  0,  0,  0],
-      "Research Fellow (RF)":       [11, 11,  3,  3,  2,  0,  0,  0],
-      "Sales Engineer":             [16, 16,  5,  2,  1,  1,  1,  1],
-      "Project Engineer (Defense)": [30, 28,  7,  2,  2,  1,  0,  1],
-      "Operations Tech (Ops)":      [93, 91, 13,  8,  5,  0,  0,  0],
-      "Production Tech (Prod)":     [86, 84, 23, 11,  5,  0,  0,  0],
-      "Business Ops Intern":        [ 8,  8,  5,  2,  0,  1,  0,  0],
-      "Industrial Design Intern":   [ 8,  8,  3,  2,  0,  0,  0,  0],
-      "Electrical Intern":          [11,  0,  0,  0,  0,  0,  0,  0],
-      "Mechanical Intern":          [21, 21,  6,  1,  0,  0,  0,  0],
-      "Software Intern":            [15, 15,  5,  1,  0,  0,  0,  0],
+      "Mechatronics Engineer":      [28, 28,  7,  8,  5,  0,  0,  0],
+      "Mechanical Engineer":        [20, 20,  9,  2,  1,  0,  0,  0],
+      "Electrical Engineer":        [48, 48, 12, 11,  7,  2,  1,  0],
+      "Asst Elec Eng":              [22, 22,  6,  4,  3,  0,  0,  0],
+      "Robotics Automation (RASE)": [19, 19,  5,  7,  3,  2,  0,  0],
+      "Research Fellow (RF)":       [13, 13,  3,  3,  3,  1,  0,  0],
+      "Sales Engineer":             [15, 15,  5,  2,  1,  1,  1,  1],
+      "Sales Engineer (MY)":        [35, 35, 11,  9,  5,  0,  0,  0],
+      "Project Engineer (Defense)": [42, 42,  9,  3,  3,  1,  0,  1],
+      "Project Engineer (MY)":      [18, 21,  5,  0,  0,  0,  0,  0],
+      "Operations Tech (Ops)":      [107,107, 13,  8,  5,  2,  0,  0],
+      "Production Tech (Prod)":     [92, 92, 24, 11,  5,  0,  0,  1],
+      "HR Executive":               [88, 88, 11,  5,  2,  1,  0,  0],
+      "Business Ops Intern":        [ 9,  9,  8,  3,  2,  0,  1,  0],
+      "Industrial Design Intern":   [18, 18,  7,  3,  0,  0,  0,  0],
+      "Electrical Intern":          [25, 25,  6,  0,  1,  0,  0,  1],
+      "Mechanical Intern":          [37, 37, 11,  4,  1,  0,  0,  0],
+      "Software Intern":            [19, 19,  7,  2,  0,  0,  0,  1],
       "PM Intern":                  [ 5,  5,  1,  1,  1,  1,  0,  1]
     }
   },
@@ -201,7 +205,7 @@ function drawLine(pos,metric){
   const x=i=>padL+i*xstep;
   const y=v=>padT+(H-padT-padB)*(1-v/max);
   let grid="";
-  for(let g=0;g<=4;g++){const gy=padT+(H-padT-padB)*g/4;const gv=Math.round(max*(1-g/4));grid+='<line x1="'+padL+'" y1="'+gy+'" x2="'+(W-padR)+'" y2="'+gy+'" stroke="var(--grid)"/><text x="'+(padL-8)+'" y="'+(gy+4)+'" font-size="11" fill="var(--hint)" text-anchor="end">'+gv+'</text>';}
+  for(let g=0;g<=4;g++){const gy=padT+(H-padT-padB)*g/4;const gv=Math.round(max*(1-g/4));grid+='<line x1="'+padL+'" y1="'+gy+'" x2="'+(W-padR)+'" y2="'+gy+'" stroke="var(--grid)"/><text x="'+(padL-8)+'" y="'+(gy+4)+'" font-size="10" fill="var(--muted)" text-anchor="end">'+gv+'</text>';} 
   // build path only across months that have data (connect across gaps)
   let path="",dots="",labels="",started=false;
   pts.forEach((v,i)=>{
@@ -211,7 +215,7 @@ function drawLine(pos,metric){
     path+=(started?"L":"M")+px+" "+py+" ";started=true;
     dots+='<circle cx="'+px+'" cy="'+py+'" r="4" fill="var(--accent)"/><text x="'+px+'" y="'+(py-10)+'" font-size="11" fill="var(--text)" text-anchor="middle">'+v+(metric==="yield"?"%":"")+'</text>';
   });
-  const note = filled.length<2 ? '<p style="text-align:center;color:var(--hint);font-size:13px;margin:10px 0 0">'+(filled.length===0?"No data yet — fill a month in the data block.":"One month so far. Add another to see the trend line.")+'</p>' : '';
+  const note = filled.length<2 ? '<p style="text-align:center;color:var(--hint);font-size:13px;margin:10px 0 0">'+(filled.length===0?"No data yet — fill a month in the data block.":"One month so far — the line chart needs at least two months to draw a trend.")+'</p>' : '';
   document.getElementById("lineChart").innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto">'+grid+'<path d="'+path+'" fill="none" stroke="var(--accent)" stroke-width="2.5"/>'+dots+labels+'</svg>'+note;
 }
 
@@ -229,7 +233,7 @@ function drawTable(pos){
       let prev=null;
       for(let j=mi-1;j>=0;j--){const pv=metricValue(vecFor(MONTHS[j],pos),r.metric);if(pv!==null){prev=pv;break;}}
       let delta="";
-      if(prev!==null){const d=v-prev;const cls=d>0?"up":d<0?"down":"flat";const arrow=d>0?"▲":d<0?"▼":"–";delta=' <span class="delta '+cls+'">'+arrow+(d!==0?Math.abs(+d.toFixed(1)):"")+'</span>';}
+      if(prev!==null){const d=v-prev;const cls=d>0?"up":d<0?"down":"flat";const arrow=d>0?"▲":d<0?"▼":"–";delta=' <span class="delta '+cls+'">'+arrow+(d!==0?Math.abs(+d.toFixed(1)):"")+'</span>';} 
       cells+='<td>'+v+(r.metric==="yield"?"%":"")+delta+'</td>';
     });
     rows+='<tr><td>'+r.label+'</td>'+cells+'</tr>';
@@ -247,7 +251,7 @@ function drawFunnel(pos,monthIdx){
   vals.forEach((v,i)=>{
     const pct=(v/max)*100;const prev=i===0?null:vals[i-1];const conv=prev?Math.round((v/prev)*100):null;
     const row=document.createElement("div");row.className="row";
-    row.innerHTML='<div class="lab">'+stageLabels[i]+'</div><div class="track"><div class="bar" style="width:'+Math.max(pct,3)+'%;background:var('+barVars[i]+')">'+v+'</div>'+(conv!==null?'<span class="conv">'+conv+'%</span>':'<span class="conv">—</span>')+'</div>';
+    row.innerHTML='<div class="lab">'+stageLabels[i]+'</div><div class="track"><div class="bar" style="width:'+Math.max(pct,3)+'%;background:var('+barVars[i]+')">'+v+'</div>'+(conv!==null?'<span class="conv">'+conv+'%</span>':'')+'</div>';
     f.appendChild(row);
   });
 }
