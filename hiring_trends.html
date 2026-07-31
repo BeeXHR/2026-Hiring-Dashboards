@@ -148,7 +148,36 @@ const MONTHS = [
       "PM Intern":                  [ 5,  5,  1,  1,  1,  1,  0,  1]
     }
   },
-  { month: "July 2026",      data: null },
+  {
+    month: "July 2026",
+    data: {
+      "Mechanical Engineer":        [51, 50, 35, 29, 16,  3,  1,  0],
+      "Electrical Engineer":        [24, 24,  9,  8,  4,  0,  0,  0],
+      "Asst Elec Eng":              [23, 23,  5,  4,  1,  0,  0,  0],
+      "Repair Engineer":            [34, 34,  8,  6,  3,  1,  0,  0],
+      "Robotics Automation (RASE)": [28, 25, 13,  9,  6,  0,  1,  1],
+      "Research Fellow (RF)":       [ 4,  4,  1,  0,  0,  0,  1,  1],
+      "Sales Engineer":             [38, 37, 16, 14,  6,  2,  2,  1],
+      "Sales Engineer (MY)":        [24, 24, 10,  8,  2,  0,  0,  0],
+      "Project Engineer (Defense)": [32, 29,  5,  4,  4,  3,  1,  1],
+      "Project Engineer (MY)":      [18, 18, 15, 11,  7,  7,  0,  0],
+      "Operations Tech (Ops)":      [36, 36, 15, 11,  0,  0,  0,  0],
+      "Engineering Support Tech":   [40, 40,  5,  3,  0,  0,  0,  0],
+      "Senior Production Tech":     [ 2,  2,  0,  0,  0,  0,  0,  0],
+      "Production Tech (Prod)":     [53, 52, 18, 15,  0,  1,  0,  1],
+      "Finance Manager":            [43, 43,  5,  3,  0,  1,  1,  0],
+      "HR Executive":               [56, 54,  8,  5,  3,  0,  1,  0],
+      "Electrical Intern":          [23, 23,  6,  4,  2,  2,  0,  1],
+      "Mechanical Intern":          [23, 23,  6,  6,  4,  2,  0,  2],
+      "Business Ops Intern":        [27, 27, 15, 13, 10,  0,  0,  0],
+      "Software Intern":            [17, 17, 15, 12,  6,  1,  0,  1],
+      "Mechatronics Intern":        [18, 18,  5,  2,  2,  1,  0,  1],
+      "Industrial Design Intern":   [39, 39, 10,  8,  4,  3,  0,  1],
+      "Manufacturing Intern":       [ 4,  4,  2,  2,  1,  1,  0,  1],
+      "Fullstack Robotics Intern":  [23, 23,  4,  3,  0,  0,  0,  0],
+      "Admin Executive":            [59, 59,  8,  1,  0,  0,  0,  0]
+    }
+  },
   { month: "August 2026",    data: null },
   { month: "September 2026", data: null },
   { month: "October 2026",   data: null },
@@ -205,7 +234,7 @@ function drawLine(pos,metric){
   const x=i=>padL+i*xstep;
   const y=v=>padT+(H-padT-padB)*(1-v/max);
   let grid="";
-  for(let g=0;g<=4;g++){const gy=padT+(H-padT-padB)*g/4;const gv=Math.round(max*(1-g/4));grid+='<line x1="'+padL+'" y1="'+gy+'" x2="'+(W-padR)+'" y2="'+gy+'" stroke="var(--grid)"/><text x="'+(padL-8)+'" y="'+(gy+4)+'" font-size="10" fill="var(--muted)" text-anchor="end">'+gv+'</text>';} 
+  for(let g=0;g<=4;g++){const gy=padT+(H-padT-padB)*g/4;const gv=Math.round(max*(1-g/4));grid+='<line x1="'+padL+'" y1="'+gy+'" x2="'+(W-padR)+'" y2="'+gy+'" stroke="var(--grid)"/><text x="'+(padL-8)+'" y="'+(gy+4)+'" font-size="11" fill="var(--hint)" text-anchor="end">'+gv+'</text>';}
   // build path only across months that have data (connect across gaps)
   let path="",dots="",labels="",started=false;
   pts.forEach((v,i)=>{
@@ -215,7 +244,7 @@ function drawLine(pos,metric){
     path+=(started?"L":"M")+px+" "+py+" ";started=true;
     dots+='<circle cx="'+px+'" cy="'+py+'" r="4" fill="var(--accent)"/><text x="'+px+'" y="'+(py-10)+'" font-size="11" fill="var(--text)" text-anchor="middle">'+v+(metric==="yield"?"%":"")+'</text>';
   });
-  const note = filled.length<2 ? '<p style="text-align:center;color:var(--hint);font-size:13px;margin:10px 0 0">'+(filled.length===0?"No data yet — fill a month in the data block.":"One month so far — the line chart needs at least two months to draw a trend.")+'</p>' : '';
+  const note = filled.length<2 ? '<p style="text-align:center;color:var(--hint);font-size:13px;margin:10px 0 0">'+(filled.length===0?"No data yet — fill a month in the data block.":"One month so far — add more months for a trend.")+'</p>' : '';
   document.getElementById("lineChart").innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto">'+grid+'<path d="'+path+'" fill="none" stroke="var(--accent)" stroke-width="2.5"/>'+dots+labels+'</svg>'+note;
 }
 
