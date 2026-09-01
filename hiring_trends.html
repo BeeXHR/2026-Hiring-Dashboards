@@ -34,6 +34,12 @@
   .bar{height:30px;border-radius:7px;display:flex;align-items:center;padding:0 10px;color:var(--bt);font-size:13px;font-weight:500;min-width:30px;transition:width .3s;white-space:nowrap}
   .conv{font-size:12px;color:var(--hint)}
   .funhead{display:flex;gap:10px;align-items:center;margin-bottom:14px}
+  .note{color:var(--hint);font-size:13px;margin:10px 0 0}
+  /* tiny responsiveness */
+  @media (max-width:600px){
+    .lab{width:120px;font-size:12px}
+    select{min-width:140px}
+  }
 </style>
 </head>
 <body>
@@ -218,7 +224,7 @@ const stageLabels=["Applied","Resume Screened","Reached Out","HR Interview","Tec
 const barVars=["--b0","--b1","--b2","--b3","--b4","--b5","--b6","--b7"];
 
 // positions = union of all positions across months that have data
-const positions = (()=>{const s=new Set();MONTHS.forEach(m=>{if(m.data)Object.keys(m.data).forEach(p=>s.add(p));});return [...s];})();
+const positions = (()=>{const s=new Set();MONTHS.forEach(m=>{if(m.data)Object.keys(m.data).forEach(p=>s.add(p));});return [...s].sort();})();
 
 // returns the metric vector for a month, or null if that month has no data
 function vecFor(monthObj, pos){
@@ -259,19 +265,36 @@ function drawLine(pos,metric){
   const xstep=n>1?(W-padL-padR)/(n-1):0;
   const x=i=>padL+i*xstep;
   const y=v=>padT+(H-padT-padB)*(1-v/max);
-  let grid="";
-  for(let g=0;g<=4;g++){const gy=padT+(H-padT-padB)*g/4;const gv=Math.round(max*(1-g/4));grid+='<line x1="'+padL+'" y1="'+gy+'" x2="'+(W-padR)+'" y2="'+gy+'" stroke="var(--grid)"/><text x="'+(padL-8)+[...]
+
+  // build grid lines + left value labels
+  let grid = '';
+  for(let g=0; g<=4; g++){
+    const gy = padT + (H-padT-padB) * g/4;
+    const gv = Math.round(max * (1 - g/4));
+    grid += '<line x1="'+padL+'" y1="'+gy+'" x2="'+(W-padR)+'" y2="'+gy+'" stroke="var(--grid)"/>';
+    grid += '<text x="'+(padL-8)+'" y="'+(gy+4)+'" font-size="11" text-anchor="end" fill="var(--muted)">'+gv+'</text>';
+  }
+
   // build path only across months that have data (connect across gaps)
-  let path="",dots="",labels="",started=false;
+  let path = '', dots = '', labels = '';
+  let started = false;
   pts.forEach((v,i)=>{
-    labels+='<text x="'+x(i)+'" y="'+(H-padB+20)+'" font-size="10" fill="'+(v===null?"var(--hint)":"var(--muted)")+'" text-anchor="middle">'+MONTHS[i].month.replace(" 20"," '")+'</text>';
+    // x label for each month (formatted short)
+    labels += '<text x="'+x(i)+'" y="'+(H-padB+20)+'" font-size="10" fill="'+(v===null?"var(--hint)":"var(--muted)")+'" text-anchor="middle">'+MONTHS[i].month.replace(" 20"," '")+'</text>';
     if(v===null) return;
-    const px=x(i),py=y(v);
-    path+=(started?"L":"M")+px+" "+py+" ";started=true;
-    dots+='<circle cx="'+px+'" cy="'+py+'" r="4" fill="var(--accent)"/><text x="'+px+'" y="'+(py-10)+'" font-size="11" fill="var(--text)" text-anchor="middle">'+v+(metric==="yield"?"%":"")+'</tex[...]
+    const px = x(i), py = y(v);
+    path += (started ? "L" : "M") + px + " " + py + " ";
+    started = true;
+    dots += '<circle cx="'+px+'" cy="'+py+'" r="4" fill="var(--accent)"/>';
+    dots += '<text x="'+px+'" y="'+(py-10)+'" font-size="11" fill="var(--text)" text-anchor="middle">'+ (metric==="yield" ? (v+"%") : v) +'</text>';
   });
-  const note = filled.length<2 ? '<p style="text-align:center;color:var(--hint);font-size:13px;margin:10px 0 0">'+(filled.length===0?"No data yet — fill a month in the data block.":"One month s[...]
-  document.getElementById("lineChart").innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto">'+grid+'<path d="'+path+'" fill="none" stroke="var(--accent)" stroke-width="2.5"/>'[...]
+
+  // if there's not enough data to draw a line, show a note instead
+  const content = (filled.length < 2)
+    ? '<div class="note">'+(filled.length===0 ? 'No data yet — fill a month in the data block.' : 'Only one month has data — add another month to see a trend.')+'</div>'
+    : '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto">'+grid+'<path d="'+path+'" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>'+dots+labels+'</svg>';
+
+  document.getElementById("lineChart").innerHTML = content;
 }
 
 /* ---------- trend table ---------- */
@@ -288,8 +311,14 @@ function drawTable(pos){
       let prev=null;
       for(let j=mi-1;j>=0;j--){const pv=metricValue(vecFor(MONTHS[j],pos),r.metric);if(pv!==null){prev=pv;break;}}
       let delta="";
-      if(prev!==null){const d=v-prev;const cls=d>0?"up":d<0?"down":"flat";const arrow=d>0?"▲":d<0?"▼":"–";delta=' <span class="delta '+cls+'">'+arrow+(d!==0?Math.abs(+d.toFixed(1)):"")+'</s[...]
-      cells+='<td>'+v+(r.metric==="yield"?"%":"")+delta+'</td>';
+      if(prev!==null){
+        const d = v - prev;
+        const cls = d>0 ? "up" : d<0 ? "down" : "flat";
+        const arrow = d>0 ? "▲" : d<0 ? "▼" : "–";
+        const val = (Math.abs(d) === 0) ? "" : Math.abs(+d.toFixed(1));
+        delta = ' <span class="delta '+cls+'">'+arrow + (val ? (' '+val) : '') +'</span>';
+      }
+      cells+='<td>'+ (r.metric==="yield" ? (v+"%") : v) + delta +'</td>';
     });
     rows+='<tr><td>'+r.label+'</td>'+cells+'</tr>';
   });
@@ -300,13 +329,17 @@ function drawTable(pos){
 function drawFunnel(pos,monthIdx){
   const vals=vecFor(MONTHS[monthIdx],pos);
   const f=document.getElementById("funnel");
-  if(vals===null){f.innerHTML='<p style="color:var(--hint);font-size:13px;margin:4px 0">No data for '+MONTHS[monthIdx].month+' yet.</p>';return;}
+  if(vals===null){f.innerHTML='<p class="note">No data for '+MONTHS[monthIdx].month+' yet.</p>';return;}
   const max=Math.max(...vals,1);
   f.innerHTML="";
   vals.forEach((v,i)=>{
-    const pct=(v/max)*100;const prev=i===0?null:vals[i-1];const conv=prev?Math.round((v/prev)*100):null;
+    const pct=(v/max)*100;
+    const prev=i===0?null:vals[i-1];
+    const conv = prev ? Math.round((v/prev)*100) : null;
     const row=document.createElement("div");row.className="row";
-    row.innerHTML='<div class="lab">'+stageLabels[i]+'</div><div class="track"><div class="bar" style="width:'+Math.max(pct,3)+'%;background:var('+barVars[i]+')">'+v+'</div>'+(conv!==null?'<span [...]
+    const barColor = getComputedStyle(document.documentElement).getPropertyValue(barVars[i]) || 'var(--accent)';
+    const barHtml = '<div class="lab">'+stageLabels[i]+'</div><div class="track"><div class="bar" style="width:'+Math.max(pct,3)+'%;background:'+barColor+'">'+v+'</div>' + (conv!==null?'<span class="conv">'+conv+'%</span>':'') + '</div>';
+    row.innerHTML = barHtml;
     f.appendChild(row);
   });
 }
