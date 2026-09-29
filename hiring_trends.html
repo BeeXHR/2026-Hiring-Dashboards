@@ -211,7 +211,36 @@ const MONTHS = [
       "Robotics Technical Writer":  [30, 30,  7,  5,  0,  0,  0,  0]
     }
   },
-  { month: "September 2026", data: null },
+  {
+    month: "September 2026",
+    data: {
+      "Mechatronics Engineer":      [15, 15,  4,  4,  2,  1,  1,  1],
+      "Mechanical Engineer":        [28, 28, 16, 16, 10,  2,  1,  1],
+      "Electrical Engineer":        [11, 11,  4,  3,  2,  1,  0,  0],
+      "Asst Elec Eng":              [ 4,  4,  0,  0,  0,  0,  0,  0],
+      "Robotics Autonomy Software Engineer (RASE)": [10, 10,  6,  4,  4,  0,  0,  0],
+      "Robotics Technical Writer":  [ 5,  5,  4,  2,  0,  0,  0,  0],
+      "Sales Engineer":             [ 6,  6,  3,  1,  1,  0,  0,  0],
+      "Sales Engineer (MY)":        [ 4,  4,  2,  0,  0,  0,  0,  0],
+      "Project Engineer (Defense)": [22, 22, 12, 10,  7,  3,  0,  0],
+      "Project Engineer (MY)":      [ 8,  8,  4,  4,  2,  1,  1,  1],
+      "Manufacturing Engineer":     [ 2,  2,  1,  1,  0,  0,  0,  0],
+      "HR Executive":               [21, 21,  0,  0,  0,  0,  0,  0],
+      "Operations Engineer":        [11, 11,  2,  0,  1,  0,  0,  0],
+      "Operations Tech (Ops)":      [38, 38, 12, 12,  0,  1,  0,  1],
+      "Production Tech (Prod)":     [12, 12,  7,  5,  0,  0,  0,  1],
+      "Business Ops Intern":        [ 8,  8,  6,  6,  3,  2,  0,  1],
+      "HR Ops Intern":              [ 4,  4,  2,  1,  0,  0,  0,  0],
+      "Mechatronics Intern":        [10, 10,  1,  1,  0,  0,  0,  1],
+      "Mechanical Intern":          [12, 12,  2,  2,  1,  0,  0,  2],
+      "Electrical Intern":          [11, 11,  6,  3,  2,  0,  0,  0],
+      "Software Intern":            [ 8,  8,  5,  4,  4,  1,  0,  1],
+      "Fullstack Robotics Intern": [11, 11,  3,  3,  1,  0,  0,  0],
+      "PM Intern":                  [ 0,  0,  0,  0,  0,  0,  0,  0],
+      "Finance Intern":             [21, 21,  5,  5,  4,  4,  0,  2],
+      "Industrial Design Intern":   [13, 13,  5,  3,  1,  0,  0,  1]
+    }
+  },
   { month: "October 2026",   data: null },
   { month: "November 2026",  data: null },
   { month: "December 2026",  data: null }
@@ -299,7 +328,7 @@ function drawLine(pos,metric){
 
 /* ---------- trend table ---------- */
 function drawTable(pos){
-  let head='<tr><th>Stage</th>'+MONTHS.map(m=>'<th'+(m.data?"":' style="color:var(--hint)"')+'>'+m.month.replace(" 20"," '")+'</th>').join("")+'</tr>';
+  let head='<tr><th>Stage</th>'+MONTHS.map(m=>'<th'+(m.data?"":" style=\"color:var(--hint)\"")+'>'+m.month.replace(" 20"," '")+'</th>').join("")+'</tr>';
   let rows="";
   const allRows=[...stageLabels.map((s,i)=>({label:s,metric:i})),{label:"Yield %",metric:"yield"}];
   allRows.forEach(r=>{
