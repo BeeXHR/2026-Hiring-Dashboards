@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cost per hire with grant funding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF3F5; --surface:#FFFFFF; --ink:#12293A; --muted:#566B79; --line:#D3DDE3;
+  --salary:#1D4F6E; --cpf:#5E8DA8; --fee:#A7C1D0; --fund:#2B8A68; --fund-soft:#D8EEE5;
+  --warn:#9A6513; --warn-soft:#FBF0DC; --field:#F7FAFB;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1A22; --surface:#15252F; --ink:#E4EDF2; --muted:#93A8B5; --line:#2A3E4B;
+    --salary:#6FA7C9; --cpf:#4D7A94; --fee:#33566B; --fund:#4CC096; --fund-soft:#173A30;
+    --warn:#E3B062; --warn-soft:#3A2D16; --field:#1B2E3A; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1A22; --surface:#15252F; --ink:#E4EDF2; --muted:#93A8B5; --line:#2A3E4B;
+  --salary:#6FA7C9; --cpf:#4D7A94; --fee:#33566B; --fund:#4CC096; --fund-soft:#173A30;
+  --warn:#E3B062; --warn-soft:#3A2D16; --field:#1B2E3A; color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-variant-numeric:tabular-nums}
+.wrap{max-width:1220px;margin:0 auto;padding:28px 20px 48px}
+header{margin-bottom:24px;max-width:70ch}
+h1{font:500 clamp(26px,3.4vw,36px)/1.15 "IBM Plex Serif",Georgia,serif;margin:0 0 8px;letter-spacing:-.01em}
+header p{margin:0;color:var(--muted)}
+.layout{display:grid;grid-template-columns:minmax(300px,380px) 1fr;gap:24px;align-items:start}
+@media (max-width:900px){.layout{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px}
+.inputs{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);max-height:calc(100vh - 32px);overflow:auto}
+@media (max-width:900px){.inputs{position:static;max-height:none}}
+h2{font-size:17px;font-weight:600;margin:0 0 4px}
+h3{font-size:14px;font-weight:600;margin:22px 0 10px;padding-top:16px;border-top:1px solid var(--line)}
+h3:first-of-type{border-top:0;padding-top:0;margin-top:4px}
+.hint{font-size:13px;color:var(--muted);margin:0 0 10px}
+label{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}
+input,select{width:100%;font:inherit;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:6px;padding:7px 9px;min-width:0}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--fund);outline-offset:2px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.row3{grid-template-columns:1fr 1fr 1fr}
+.field{margin-bottom:10px}
+.check{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--ink);margin:0 0 10px;cursor:pointer}
+.check input{width:auto}
+.prog{border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:10px;background:var(--surface)}
+.prog-head{display:grid;grid-template-columns:1fr 118px auto;gap:8px;margin-bottom:10px;align-items:end}
+button{font:inherit;cursor:pointer;border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:7px 12px}
+button.primary{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+button.ghost{border-color:transparent;color:var(--muted);padding:7px 8px}
+button.ghost:hover{color:var(--ink)}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+.warn{font-size:13px;color:var(--warn);background:var(--warn-soft);border-radius:6px;padding:6px 9px;margin-top:8px}
+
+/* Scenario bars — the centrepiece */
+.scen{padding:16px 0;border-top:1px solid var(--line);cursor:pointer}
+.scen:first-of-type{border-top:0;padding-top:4px}
+.scen-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.scen-name{font-weight:600}
+.scen-desc{font-size:13px;color:var(--muted)}
+.net{font:500 26px/1.1 "IBM Plex Serif",Georgia,serif;white-space:nowrap}
+.net small{font:13px "IBM Plex Sans",sans-serif;color:var(--muted);margin-left:4px}
+.bar{position:relative;height:22px;margin:10px 0 6px;border-radius:4px;overflow:hidden;background:var(--field)}
+.seg{position:absolute;top:0;bottom:0}
+.seg.fund{background:repeating-linear-gradient(135deg,var(--fund) 0 2px,var(--fund-soft) 2px 7px);border-left:2px solid var(--fund)}
+.scen-math{font-size:13px;color:var(--muted)}
+.scen-math b{color:var(--fund);font-weight:600}
+.scen[aria-pressed="true"] .scen-name::after{content:"  (shown in breakdown)";font-weight:400;color:var(--muted);font-size:13px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--muted);margin:4px 0 6px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:2px;vertical-align:-1px;margin-right:6px}
+
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 14px}
+.tabs button[aria-selected="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:560px}
+th,td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+thead th{font-weight:600;font-size:13px;color:var(--muted);border-bottom:2px solid var(--line)}
+td.f{color:var(--fund)}
+tr.total td{font-weight:600;border-top:2px solid var(--ink);border-bottom:0}
+tr.sub td{color:var(--muted)}
+.notes{font-size:13px;color:var(--muted);max-width:75ch}
+.notes p{margin:0 0 8px}
+.saved-list{list-style:none;padding:0;margin:10px 0 0}
+.saved-list li{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-top:1px solid var(--line);font-size:14px}
+.saved-list span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stack{display:grid;gap:24px}
+@media print{
+  body{background:#fff}
+  .inputs,.no-print{display:none!important}
+  .layout{grid-template-columns:1fr}
+  .panel{border:0;padding:0}
+}
+@media (prefers-reduced-motion:no-preference){.seg{transition:left .25s ease,width .25s ease}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Cost per hire with grant funding</h1>
+    <p>Enter the hire’s salary and the funding programmes once. Every funding scenario, from no funding to all programmes approved, recalculates as you type.</p>
+  </header>
+
+  <div class="layout">
+    <!-- INPUTS -->
+    <aside class="panel inputs" aria-label="Inputs">
+      <h3>Hire</h3>
+      <div class="row">
+        <div><label for="name">Candidate</label><input id="name" data-k="name" type="text"></div>
+        <div><label for="role">Role</label><input id="role" data-k="role" type="text" placeholder="e.g. Robotics Engineer"></div>
+      </div>
+      <div class="row row3">
+        <div><label for="salary">Monthly salary (S$)</label><input id="salary" data-k="salary" type="number" min="0" step="100"></div>
+        <div><label for="aws">AWS (months)</label><input id="aws" data-k="awsMonths" type="number" min="0" step="0.5"></div>
+        <div><label for="horizon">Period (months)</label><input id="horizon" data-k="horizon" type="number" min="1" max="36" step="1"></div>
+      </div>
+      <p class="hint">AWS is paid in month 12 (and 24, 36 for longer periods).</p>
+
+      <h3>Employer CPF</h3>
+      <label class="check"><input type="checkbox" data-k="cpf.on" id="cpfOn"> Hire is a Singapore Citizen or PR</label>
+      <div class="row row3">
+        <div><label for="cpfRate">Rate (%)</label><input id="cpfRate" data-k="cpf.rate" type="number" min="0" step="0.5"></div>
+        <div><label for="cpfOw">OW ceiling / mth</label><input id="cpfOw" data-k="cpf.ow" type="number" min="0" step="100"></div>
+        <div><label for="cpfAnn">Annual ceiling</label><input id="cpfAnn" data-k="cpf.annual" type="number" min="0" step="1000"></div>
+      </div>
+      <p class="hint">17% is the employer rate for employees aged 55 and below. Check the current CPF ceilings each January.</p>
+
+      <h3>Recruitment agency</h3>
+      <label class="check"><input type="checkbox" data-k="agency.on" id="agOn"> Hired through an agency</label>
+      <div class="row">
+        <div><label for="agPct">Fee (%)</label><input id="agPct" data-k="agency.pct" type="number" min="0" step="0.5"></div>
+        <div><label for="agBasis">Charged on</label>
+          <select id="agBasis" data-k="agency.basis">
+            <option value="base12">12 × monthly salary</option>
+            <option value="withAws">Annual salary incl. AWS</option>
+          </select></div>
+      </div>
+
+      <h3>Funding programmes</h3>
+      <p class="hint">Monthly funding = cover % × the lower of salary and the qualifying cap. Add an alternative cover % for programmes with a pending or variable rate.</p>
+      <div id="progs"></div>
+      <button type="button" id="addProg">Add programme</button>
+
+      <h3>Saved calculations</h3>
+      <div class="row" style="grid-template-columns:1fr auto">
+        <input id="saveName" type="text" placeholder="Name this calculation" aria-label="Name this calculation">
+        <button type="button" class="primary" id="saveBtn">Save</button>
+      </div>
+      <p class="hint" id="saveMsg">Saved in this browser only.</p>
+      <ul class="saved-list" id="savedList"></ul>
+      <div class="btns" style="margin-top:14px">
+        <button type="button" id="resetBtn">Start a new calculation</button>
+      </div>
+    </aside>
+
+    <!-- RESULTS -->
+    <main class="stack">
+      <section class="panel" aria-labelledby="scenH">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap">
+          <h2 id="scenH">Net cost by funding scenario</h2>
+          <button type="button" class="no-print" onclick="window.print()">Print or save as PDF</button>
+        </div>
+        <p class="hint" id="scenSub"></p>
+        <div class="legend">
+          <span><i style="background:var(--salary)"></i>Salary + AWS</span>
+          <span><i style="background:var(--cpf)"></i>Employer CPF</span>
+          <span><i style="background:var(--fee)"></i>Agency fee</span>
+          <span><i style="background:repeating-linear-gradient(135deg,var(--fund) 0 2px,var(--fund-soft) 2px 7px)"></i>Funding received</span>
+        </div>
+        <div id="scenarios"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="brkH">
+        <h2 id="brkH">Month-by-month breakdown</h2>
+        <div class="tabs" role="tablist" id="tabs"></div>
+        <div class="table-wrap"><table id="tbl"></table></div>
+      </section>
+
+      <section class="panel notes" aria-labelledby="howH">
+        <h2 id="howH" style="color:var(--ink)">How the numbers are worked out</h2>
+        <p>Gross cost = monthly salary × period + AWS + employer CPF + agency fee.</p>
+        <p>Net cost = gross cost − funding received. Funding covers monthly salary only, not AWS, CPF or fees.</p>
+        <p>Employer CPF is charged on salary up to the monthly ordinary-wage ceiling, and on AWS up to the annual ceiling minus the year’s CPF-able salary.</p>
+        <p>The agency fee is a one-off charge in month 1. Figures are rounded to the nearest dollar for display.</p>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+(function(){
+  var STORE='cph-calculator-v1';
+  function defaults(){
+    return {
+      name:'', role:'', salary:6000, awsMonths:1, horizon:12,
+      cpf:{on:true, rate:17, ow:8000, annual:102000},
+      agency:{on:true, pct:15, basis:'base12'},
+      programmes:[
+        {id:uid(), name:'Summation (SGInnovate)', cap:4000, cover:70, alt:'', from:1, to:6, status:'confirmed'},
+        {id:uid(), name:'PowerX (SGInnovate)', cap:5000, cover:50, alt:70, from:7, to:12, status:'tentative'}
+      ]
+    };
+  }
+  function blank(){
+    var d=defaults(); d.name=''; d.role='';
+    return d;
+  }
+  function uid(){return Math.random().toString(36).slice(2,9)}
+  function num(v){var n=parseFloat(v);return isFinite(n)?n:0}
+  function money(n){return 'S$'+Math.round(n).toLocaleString('en-SG')}
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+
+  var S=defaults(), selected='confirmed';
+
+  // ---------- calculation ----------
+  function compute(sc){
+    var H=Math.max(1,Math.min(36,Math.round(num(S.horizon)))), sal=num(S.salary);
+    var progs=S.programmes.filter(sc.include);
+    var months=[], yearOW=0, t={base:0,aws:0,cpf:0,fund:0,byProg:{}};
+    progs.forEach(function(p){t.byProg[p.id]=0});
+    for(var m=1;m<=H;m++){
+      if((m-1)%12===0) yearOW=0;
+      var aws=(m%12===0)?sal*num(S.awsMonths):0, cpf=0;
+      if(S.cpf.on){
+        var ow=Math.min(sal,num(S.cpf.ow)); yearOW+=ow;
+        var aw=Math.min(aws,Math.max(0,num(S.cpf.annual)-yearOW));
+        cpf=num(S.cpf.rate)/100*(ow+aw);
+      }
+      var by={}, fund=0;
+      progs.forEach(function(p){
+        var a=0;
+        if(m>=num(p.from)&&m<=num(p.to)){
+          var pct=(sc.alt&&p.alt!==''&&p.alt!=null)?num(p.alt):num(p.cover);
+          a=pct/100*Math.min(sal,num(p.cap));
+        }
+        by[p.id]=a; fund+=a; t.byProg[p.id]+=a;
+      });
+      months.push({m:m,base:sal,aws:aws,cpf:cpf,by:by,fund:fund});
+      t.base+=sal; t.aws+=aws; t.cpf+=cpf; t.fund+=fund;
+    }
+    var agency=0;
+    if(S.agency.on){
+      var basis=S.agency.basis==='withAws'?sal*(12+num(S.awsMonths)):sal*12;
+      agency=num(S.agency.pct)/100*basis;
+    }
+    t.agency=agency;
+    t.gross=t.base+t.aws+t.cpf+agency;
+    t.net=t.gross-t.fund;
+    return {months:months,t:t,progs:progs,H:H};
+  }
+
+  function scenarios(){
+    var hasTent=S.programmes.some(function(p){return p.status==='tentative'});
+    var hasAlt=S.programmes.some(function(p){return p.alt!==''&&p.alt!=null});
+    var list=[{key:'none',name:'No funding',include:function(){return false}}];
+    if(S.programmes.some(function(p){return p.status==='confirmed'}))
+      list.push({key:'confirmed',name:'Confirmed funding only',include:function(p){return p.status==='confirmed'}});
+    if(hasTent||!list[1]&&S.programmes.length)
+      list.push({key:'all',name:'All programmes',include:function(){return true}});
+    if(hasAlt)
+      list.push({key:'allAlt',name:'All programmes, alternative rates',include:function(){return true},alt:true});
+    return list;
+  }
+  function describe(sc,r){
+    if(!r.progs.length) return 'Full cost, no grants applied';
+    return r.progs.map(function(p){
+      var pct=(sc.alt&&p.alt!==''&&p.alt!=null)?num(p.alt):num(p.cover);
+      return (p.name||'Unnamed')+' '+pct+'% (months '+num(p.from)+'–'+num(p.to)+')';
+    }).join(' + ');
+  }
+
+  // ---------- render results ----------
+  function render(){
+    var list=scenarios(), results=list.map(function(sc){return {sc:sc,r:compute(sc)}});
+    if(!list.some(function(s){return s.key===selected})) selected=list[list.length>1?1:0].key;
+    var max=Math.max.apply(null,results.map(function(x){return x.r.t.gross}))||1;
+    var who=[S.name,S.role].filter(Boolean).join(', ');
+    document.getElementById('scenSub').textContent=(who?who+': ':'')+money(num(S.salary))+' a month over '+results[0].r.H+' months. Select a scenario to see its monthly breakdown.';
+
+    document.getElementById('scenarios').innerHTML=results.map(function(x){
+      var t=x.r.t, w=function(v){return (v/max*100).toFixed(2)+'%'};
+      var s1=t.base+t.aws, s2=s1+t.cpf;
+      var fundLeft=(t.gross-t.fund)/max*100;
+      return '<div class="scen" role="button" tabindex="0" data-sc="'+x.sc.key+'" aria-pressed="'+(x.sc.key===selected)+'">'+
+        '<div class="scen-top"><div><div class="scen-name">'+esc(x.sc.name)+'</div><div class="scen-desc">'+esc(describe(x.sc,x.r))+'</div></div>'+
+        '<div class="net">'+money(t.net)+'<small>net</small></div></div>'+
+        '<div class="bar" aria-hidden="true">'+
+          '<div class="seg" style="left:0;width:'+w(s1)+';background:var(--salary)"></div>'+
+          '<div class="seg" style="left:'+w(s1)+';width:'+w(t.cpf)+';background:var(--cpf)"></div>'+
+          '<div class="seg" style="left:'+w(s2)+';width:'+w(t.agency)+';background:var(--fee)"></div>'+
+          (t.fund>0?'<div class="seg fund" style="left:'+fundLeft.toFixed(2)+'%;width:'+w(t.fund)+'"></div>':'')+
+        '</div>'+
+        '<div class="scen-math">Gross '+money(t.gross)+(t.fund>0?' − funding <b>'+money(t.fund)+'</b> ('+Math.round(t.fund/t.gross*100)+'% of gross)':'')+
+        ', or '+money(t.net/x.r.H)+' a month</div></div>';
+    }).join('');
+
+    document.getElementById('tabs').innerHTML=results.map(function(x){
+      return '<button type="button" role="tab" data-sc="'+x.sc.key+'" aria-selected="'+(x.sc.key===selected)+'">'+esc(x.sc.name)+'</button>';
+    }).join('');
+
+    var cur=results.filter(function(x){return x.sc.key===selected})[0], r=cur.r, t=r.t;
+    var head='<thead><tr><th>Month</th><th>Salary</th><th>AWS</th><th>Employer CPF</th>'+
+      r.progs.map(function(p){return '<th>'+esc(p.name||'Unnamed')+'</th>'}).join('')+'<th>Net cost</th></tr></thead>';
+    var rows=r.months.map(function(mo){
+      var net=mo.base+mo.aws+mo.cpf-mo.fund;
+      return '<tr><td>'+mo.m+'</td><td>'+money(mo.base)+'</td><td>'+(mo.aws?money(mo.aws):'–')+'</td><td>'+(mo.cpf?money(mo.cpf):'–')+'</td>'+
+        r.progs.map(function(p){return '<td class="f">'+(mo.by[p.id]?'−'+money(mo.by[p.id]):'–')+'</td>'}).join('')+
+        '<td>'+money(net)+'</td></tr>';
+    }).join('');
+    var span=r.progs.length;
+    var agencyRow=t.agency?'<tr class="sub"><td>Agency fee (one-off)</td><td colspan="'+(3+span)+'"></td><td>'+money(t.agency)+'</td></tr>':'';
+    var total='<tr class="total"><td>Total</td><td>'+money(t.base)+'</td><td>'+money(t.aws)+'</td><td>'+money(t.cpf)+'</td>'+
+      r.progs.map(function(p){return '<td class="f">−'+money(t.byProg[p.id])+'</td>'}).join('')+'<td>'+money(t.net)+'</td></tr>';
+    document.getElementById('tbl').innerHTML=head+'<tbody>'+rows+agencyRow+total+'</tbody>';
+  }
+
+  // ---------- inputs ----------
+  function get(path){return path.split('.').reduce(function(o,k){return o[k]},S)}
+  function set(path,v){var ks=path.split('.'),o=S;for(var i=0;i<ks.length-1;i++)o=o[ks[i]];o[ks[ks.length-1]]=v}
+  function fillInputs(){
+    document.querySelectorAll('[data-k]').forEach(function(el){
+      var v=get(el.dataset.k);
+      if(el.type==='checkbox') el.checked=!!v; else el.value=v;
+    });
+    renderProgs();
+  }
+  document.querySelector('.inputs').addEventListener('input',function(e){
+    var el=e.target;
+    if(el.dataset.k){
+      var v=el.type==='checkbox'?el.checked:(el.type==='number'?el.value:el.value);
+      set(el.dataset.k,v); render(); progWarnings(); return;
+    }
+    if(el.dataset.pf){
+      var p=S.programmes.filter(function(x){return x.id===el.closest('.prog').dataset.id})[0];
+      p[el.dataset.pf]=el.value; render(); progWarnings();
+    }
+  });
+  document.querySelector('.inputs').addEventListener('change',function(e){
+    if(e.target.type==='checkbox'&&e.target.dataset.k){set(e.target.dataset.k,e.target.checked);render()}
+  });
+
+  function renderProgs(){
+    var box=document.getElementById('progs');
+    if(!S.programmes.length){box.innerHTML='<p class="hint">No programmes yet. Add one to compare funded scenarios.</p>';return}
+    box.innerHTML=S.programmes.map(function(p){
+      var i='p'+p.id;
+      return '<div class="prog" data-id="'+p.id+'">'+
+        '<div class="prog-head"><div><label for="'+i+'n">Programme</label><input id="'+i+'n" data-pf="name" value="'+esc(p.name)+'"></div>'+
+        '<div><label for="'+i+'s">Status</label><select id="'+i+'s" data-pf="status"><option value="confirmed"'+(p.status==='confirmed'?' selected':'')+'>Confirmed</option><option value="tentative"'+(p.status==='tentative'?' selected':'')+'>Not confirmed</option></select></div>'+
+        '<button type="button" class="ghost" data-remove="'+p.id+'" aria-label="Remove '+esc(p.name)+'">Remove</button></div>'+
+        '<div class="row row3"><div><label for="'+i+'c">Qualifying cap</label><input id="'+i+'c" type="number" min="0" step="100" data-pf="cap" value="'+esc(p.cap)+'"></div>'+
+        '<div><label for="'+i+'v">Cover %</label><input id="'+i+'v" type="number" min="0" max="100" data-pf="cover" value="'+esc(p.cover)+'"></div>'+
+        '<div><label for="'+i+'a">Alt. cover %</label><input id="'+i+'a" type="number" min="0" max="100" data-pf="alt" placeholder="optional" value="'+esc(p.alt)+'"></div></div>'+
+        '<div class="row" style="margin-bottom:0"><div><label for="'+i+'f">From month</label><input id="'+i+'f" type="number" min="1" data-pf="from" value="'+esc(p.from)+'"></div>'+
+        '<div><label for="'+i+'t">To month</label><input id="'+i+'t" type="number" min="1" data-pf="to" value="'+esc(p.to)+'"></div></div>'+
+        '<div class="warn" data-warn hidden></div></div>';
+    }).join('');
+    progWarnings();
+  }
+  function progWarnings(){
+    var H=num(S.horizon);
+    S.programmes.forEach(function(p){
+      var el=document.querySelector('.prog[data-id="'+p.id+'"] [data-warn]'); if(!el) return;
+      var msg='';
+      if(num(p.from)>num(p.to)) msg='“From month” is after “To month”, so this programme pays nothing.';
+      else if(num(p.to)>H) msg='Runs past month '+H+'. Increase the period to count the later months.';
+      else if(num(p.cover)>100||num(p.alt)>100) msg='Cover above 100% would fund more than the salary.';
+      el.hidden=!msg; el.textContent=msg;
+    });
+  }
+  document.getElementById('progs').addEventListener('change',function(e){
+    if(e.target.dataset.pf==='status'){
+      var p=S.programmes.filter(function(x){return x.id===e.target.closest('.prog').dataset.id})[0];
+      p.status=e.target.value; render();
+    }
+  });
+  document.getElementById('progs').addEventListener('click',function(e){
+    var id=e.target.dataset.remove; if(!id) return;
+    S.programmes=S.programmes.filter(function(p){return p.id!==id}); renderProgs(); render();
+  });
+  document.getElementById('addProg').addEventListener('click',function(){
+    S.programmes.push({id:uid(),name:'New programme',cap:num(S.salary),cover:50,alt:'',from:1,to:Math.round(num(S.horizon))||12,status:'tentative'});
+    renderProgs(); render();
+    var last=document.querySelector('.prog:last-child input'); if(last){last.focus();last.select()}
+  });
+
+  function pick(e){
+    var el=e.target.closest('[data-sc]'); if(!el) return;
+    if(e.type==='keydown'&&e.key!=='Enter'&&e.key!==' ') return;
+    if(e.type==='keydown') e.preventDefault();
+    selected=el.dataset.sc; render();
+  }
+  ['click','keydown'].forEach(function(ev){
+    document.getElementById('scenarios').addEventListener(ev,pick);
+    document.getElementById('tabs').addEventListener(ev,pick);
+  });
+
+  // ---------- saving (this browser only) ----------
+  function loadSaved(){try{return JSON.parse(localStorage.getItem(STORE)||'[]')}catch(e){return []}}
+  function writeSaved(list){try{localStorage.setItem(STORE,JSON.stringify(list));return true}catch(e){return false}}
+  function renderSaved(){
+    var list=loadSaved(), ul=document.getElementById('savedList');
+    ul.innerHTML=list.length?list.map(function(s,i){
+      return '<li><span title="'+esc(s.label)+'">'+esc(s.label)+'</span><span class="btns"><button type="button" data-load="'+i+'">Open</button><button type="button" class="ghost" data-del="'+i+'">Delete</button></span></li>';
+    }).join(''):'';
+  }
+  document.getElementById('saveBtn').addEventListener('click',function(){
+    var label=document.getElementById('saveName').value.trim()||[S.name,S.role].filter(Boolean).join(' – ')||'Untitled calculation';
+    var list=loadSaved().filter(function(s){return s.label!==label});
+    list.unshift({label:label,state:JSON.parse(JSON.stringify(S)),at:Date.now()});
+    var ok=writeSaved(list);
+    document.getElementById('saveMsg').textContent=ok?'Saved “'+label+'”. Saving again with the same name replaces it.':'This browser blocked saving. Use Print or save as PDF to keep a copy.';
+    document.getElementById('saveName').value=''; renderSaved();
+  });
+  document.getElementById('savedList').addEventListener('click',function(e){
+    var list=loadSaved();
+    if(e.target.dataset.load!=null){
+      var s=list[+e.target.dataset.load]; if(!s) return;
+      S=JSON.parse(JSON.stringify(s.state)); fillInputs(); render();
+      document.getElementById('saveMsg').textContent='Opened “'+s.label+'”.';
+    } else if(e.target.dataset.del!=null){
+      var gone=list.splice(+e.target.dataset.del,1)[0]; writeSaved(list); renderSaved();
+      document.getElementById('saveMsg').textContent='Deleted “'+(gone&&gone.label)+'”.';
+    }
+  });
+  document.getElementById('resetBtn').addEventListener('click',function(){
+    S=blank(); fillInputs(); render();
+    document.getElementById('saveMsg').textContent='New calculation started with the standard programme settings.';
+    document.getElementById('name').focus();
+  });
+
+  fillInputs(); render(); renderSaved();
+})();
+</script>
+</body>
+</html>
