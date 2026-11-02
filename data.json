@@ -1,130 +1,428 @@
 {
-  "updated": "2026-11-02T16:01:16.787+08:00",
+  "updated": "2026-11-02T17:59:44.454+08:00",
   "rows": [
     {
-      "name": "Oct 2026 - Mechatronics Engineer",
+      "name": "Oct 2026 - Test Technician",
+      "Applied": 13,
+      "Close Rate (%)": 0,
+      "HR Interview Done": 3,
+      "Interview Show Rate (%)": 100,
       "Month": "2026-10-01",
-      "Position": "Mechatronics Engineer"
+      "Offer Rate (%)": 0,
+      "Position": "Test Technician",
+      "Reached Out": 3,
+      "Resume Screened": 6
     },
     {
-      "name": "Oct 2026 - Mechanical Engineer",
+      "name": "Oct 2026 - QC Technician",
+      "Applied": 22,
+      "Close Rate (%)": 0,
+      "HR Interview Done": 1,
+      "Interview Show Rate (%)": 100,
       "Month": "2026-10-01",
-      "Position": "Mechanical Engineer"
+      "Offer Rate (%)": 0,
+      "Position": "QC Technician",
+      "Reached Out": 1,
+      "Resume Screened": 6
     },
     {
-      "name": "Oct 2026 - Electrical Engineer",
+      "name": "Oct 2026 - Mktg Asso",
+      "Applied": 43,
+      "Close Rate (%)": 0,
+      "HR Interview Done": 4,
+      "Interview Show Rate (%)": 100,
       "Month": "2026-10-01",
-      "Position": "Electrical Engineer"
+      "Offer Rate (%)": 0,
+      "Position": "Marketing Associate",
+      "Reached Out": 4,
+      "Resume Screened": 43,
+      "Technical Assignment Sent": 2
     },
     {
-      "name": "Oct 2026 - Asst Elect Eng",
+      "name": "Oct 2026 - Sr HR Manager",
+      "Applied": 61,
+      "Close Rate (%)": 0,
+      "HR Interview Done": 3,
+      "Interview Show Rate (%)": 100,
       "Month": "2026-10-01",
-      "Position": "Assistant Electrical Engineer"
+      "Offer Rate (%)": 0,
+      "Position": "Senior HR Manager",
+      "Reached Out": 3,
+      "Resume Screened": 22
     },
     {
-      "name": "Oct 2026 - RASE",
+      "name": "Oct 2026 - Buyer 2",
+      "Applied": 27,
+      "Close Rate (%)": 0,
+      "HR Interview Done": 5,
+      "Interview Show Rate (%)": 72,
       "Month": "2026-10-01",
-      "Position": "Robotics Autonomy Software Engineer"
+      "Offer Rate (%)": 0,
+      "Position": "Buyer 2",
+      "Reached Out": 7,
+      "Resume Screened": 27
     },
     {
-      "name": "Oct 2026 - Sales Engineer",
+      "name": "Oct 2026 - I&L Executive",
+      "Applied": 54,
+      "Close Rate (%)": 0,
+      "HR Interview Done": 6,
+      "Interview Show Rate (%)": 100,
       "Month": "2026-10-01",
-      "Position": "Sales Engineer"
+      "Offer Rate (%)": 0,
+      "Position": "Inventory & Logistics Executive",
+      "Reached Out": 6,
+      "Resume Screened": 10
     },
     {
-      "name": "Oct 2026 - Sales Engineer (MY)",
+      "name": "Oct 2026 - Production Planner",
+      "Applied": 31,
+      "Close Rate (%)": 0,
+      "HR Interview Done": 6,
+      "Interview Show Rate (%)": 100,
       "Month": "2026-10-01",
-      "Position": "Sales Engineer (MY)"
+      "Offer Rate (%)": 0,
+      "Position": "Production Planner",
+      "Reached Out": 6,
+      "Resume Screened": 8
     },
     {
-      "name": "Oct 2026 - Project Engineer (Defense)",
+      "name": "Oct 2026 - QA Engineer",
+      "Applied": 67,
+      "Close Rate (%)": 0,
+      "HR Interview Done": 15,
+      "Interview Show Rate (%)": 69,
       "Month": "2026-10-01",
-      "Position": "Project Engineer (Defense)"
+      "Offer Rate (%)": 0,
+      "Position": "Quality Assurance Engineer",
+      "Reached Out": 22,
+      "Resume Screened": 67,
+      "Technical Assignment Sent": 3
     },
     {
-      "name": "Oct 2026 - Project Engineer (MY)",
+      "name": "Oct 2026 - Test Engineer",
+      "Applied": 37,
+      "Close Rate (%)": 0,
+      "HR Interview Done": 9,
+      "Interview Show Rate (%)": 100,
       "Month": "2026-10-01",
-      "Position": "Project Engineer (MY)"
+      "Offer Rate (%)": 0,
+      "Position": "Test Engineer",
+      "Reached Out": 9,
+      "Resume Screened": 37,
+      "Technical Assignment Sent": 4
     },
     {
       "name": "Oct 2026 - Manufacturing Engineer",
+      "Applied": 31,
+      "Close Rate (%)": 0,
+      "HR Interview Done": 4,
+      "Interview Show Rate (%)": 50,
       "Month": "2026-10-01",
-      "Position": "Manufacturing Engineer"
+      "Offer Rate (%)": 0,
+      "Position": "Manufacturing Engineer Intern",
+      "Reached Out": 8,
+      "Resume Screened": 31,
+      "Technical Assignment Sent": 3
+    },
+    {
+      "name": "Oct 2026 - Prod Manager",
+      "Applied": 26,
+      "Close Rate (%)": 0,
+      "Culture Fit Interview": 2,
+      "HR Interview Done": 9,
+      "Interview Show Rate (%)": 113,
+      "Month": "2026-10-01",
+      "Offer Rate (%)": 0,
+      "Position": "Production Manager",
+      "Reached Out": 8,
+      "Resume Screened": 26
+    },
+    {
+      "name": "Oct 2026 - BD Manager (Intl Defense)",
+      "Applied": 13,
+      "Close Rate (%)": 0,
+      "Culture Fit Interview": 1,
+      "HR Interview Done": 1,
+      "Interview Show Rate (%)": 100,
+      "Month": "2026-10-01",
+      "Offer Rate (%)": 0,
+      "Position": "BD Manager (Intl Defense)",
+      "Reached Out": 1,
+      "Resume Screened": 1,
+      "Technical Assignment Sent": 1,
+      "Technical Interview Scheduled": 1
+    },
+    {
+      "name": "OCt 2026 - Sr RASE",
+      "Applied": 11,
+      "Close Rate (%)": 0,
+      "HR Interview Done": 2,
+      "Interview Show Rate (%)": 50,
+      "Month": "2026-10-01",
+      "Offer Rate (%)": 0,
+      "Position": "Sr RASE",
+      "Reached Out": 4,
+      "Resume Screened": 11,
+      "Technical Assignment Sent": 2
+    },
+    {
+      "name": "Oct 2026 - Mechatronics Engineer",
+      "Applied": 39,
+      "Close Rate (%)": 0,
+      "HR Interview Done": 10,
+      "Interview Show Rate (%)": 91,
+      "Month": "2026-10-01",
+      "Offer Rate (%)": 0,
+      "Position": "Mechatronics Engineer",
+      "Reached Out": 11,
+      "Resume Screened": 39,
+      "Technical Assignment Sent": 6,
+      "Technical Interview Scheduled": 2
+    },
+    {
+      "name": "Oct 2026 - Mechanical Engineer",
+      "Applied": 61,
+      "Close Rate (%)": 10,
+      "HR Interview Done": 10,
+      "Interview Show Rate (%)": 100,
+      "Month": "2026-10-01",
+      "Offer Rate (%)": 2,
+      "Offered": 1,
+      "Offered Date": "2026-10-13",
+      "Position": "Mechanical Engineer",
+      "Reached Out": 10,
+      "Resume Screened": 61,
+      "Technical Assignment Sent": 5,
+      "Technical Interview Scheduled": 1,
+      "Time to Hire": 12
+    },
+    {
+      "name": "Oct 2026 - Electrical Engineer",
+      "Applied": 35,
+      "Close Rate (%)": 15,
+      "Culture Fit Interview": 1,
+      "HR Interview Done": 7,
+      "Interview Show Rate (%)": 59,
+      "Month": "2026-10-01",
+      "Offer Rate (%)": 3,
+      "Offered": 1,
+      "Offered Date": "2026-10-19",
+      "Position": "Electrical Engineer",
+      "Reached Out": 12,
+      "Resume Screened": 35,
+      "Technical Assignment Sent": 3,
+      "Technical Interview Scheduled": 2,
+      "Time to Hire": 18
+    },
+    {
+      "name": "Oct 2026 - Draftsman",
+      "Applied": 56,
+      "Close Rate (%)": 0,
+      "HR Interview Done": 11,
+      "Interview Show Rate (%)": 85,
+      "Month": "2026-10-01",
+      "Offer Rate (%)": 0,
+      "Position": "Assistant Electrical Engineer",
+      "Reached Out": 13,
+      "Resume Screened": 56,
+      "Technical Assignment Sent": 3
+    },
+    {
+      "name": "Oct 2026 - RASE",
+      "Applied": 14,
+      "Close Rate (%)": 0,
+      "HR Interview Done": 4,
+      "Interview Show Rate (%)": 200,
+      "Month": "2026-10-01",
+      "Offer Rate (%)": 0,
+      "Position": "Robotics Autonomy Software Engineer",
+      "Reached Out": 2,
+      "Resume Screened": 14,
+      "Technical Assignment Sent": 2
+    },
+    {
+      "name": "Oct 2026 - Sales Engineer",
+      "Applied": 8,
+      "Month": "2026-10-01",
+      "Offer Rate (%)": 0,
+      "Position": "Sales Engineer",
+      "Resume Screened": 8
+    },
+    {
+      "name": "Oct 2026 - Sales Engineer (MY)",
+      "Applied": 10,
+      "Month": "2026-10-01",
+      "Offer Rate (%)": 0,
+      "Position": "Sales Engineer (MY)",
+      "Resume Screened": 10
+    },
+    {
+      "name": "Oct 2026 - Project Engineer (Defense)",
+      "Applied": 19,
+      "Close Rate (%)": 100,
+      "Culture Fit Interview": 1,
+      "HR Interview Done": 1,
+      "Interview Show Rate (%)": 100,
+      "Month": "2026-10-01",
+      "Offer Rate (%)": 6,
+      "Offered": 1,
+      "Offered Date": "2026-10-13",
+      "Position": "Project Engineer (Defense)",
+      "Reached Out": 1,
+      "Resume Screened": 19,
+      "Time to Hire": 12
+    },
+    {
+      "name": "Oct 2026 - Project Engineer (MY)",
+      "Applied": 13,
+      "Month": "2026-10-01",
+      "Offer Rate (%)": 0,
+      "Position": "Project Engineer (MY)",
+      "Resume Screened": 13
     },
     {
       "name": "Oct 2026 - Biz Ops Intern",
+      "Applied": 12,
+      "Close Rate (%)": 20,
+      "HR Interview Done": 5,
+      "Interview Show Rate (%)": 72,
       "Month": "2026-10-01",
-      "Position": "Business Operations Intern"
+      "Offer Rate (%)": 9,
+      "Offered": 1,
+      "Offered Date": "2026-10-01",
+      "Position": "Business Operations Intern",
+      "Reached Out": 7,
+      "Resume Screened": 12,
+      "Technical Assignment Sent": 3,
+      "Technical Interview Scheduled": 1,
+      "Time to Hire": 0
     },
     {
       "name": "Oct 2026 - HR Ops Intern",
+      "Applied": 3,
       "Month": "2026-10-01",
-      "Position": "HR Operations Intern"
+      "Offer Rate (%)": 0,
+      "Position": "HR Operations Intern",
+      "Resume Screened": 3
     },
     {
       "name": "Oct 2026 - Mechatronics Intern",
+      "Applied": 12,
       "Month": "2026-10-01",
-      "Position": "Mechatronics Intern"
-    },
-    {
-      "name": "Oct 2026 - HR Executive",
-      "Month": "2026-10-01",
-      "Position": "HR Executive"
+      "Offer Rate (%)": 0,
+      "Position": "Mechatronics Intern",
+      "Resume Screened": 12
     },
     {
       "name": "Oct 2026 - Prod Tech",
+      "Applied": 16,
       "Month": "2026-10-01",
-      "Position": "Production Technician"
+      "Offer Rate (%)": 0,
+      "Position": "Production Technician",
+      "Resume Screened": 16
     },
     {
       "name": "Oct 2026 - Ops Tech",
+      "Applied": 7,
+      "Close Rate (%)": 0,
+      "HR Interview Done": 1,
+      "Interview Show Rate (%)": 100,
       "Month": "2026-10-01",
-      "Position": "Operations Technician"
+      "Offer Rate (%)": 0,
+      "Position": "Operations Technician",
+      "Reached Out": 1,
+      "Resume Screened": 7,
+      "Technical Interview Scheduled": 1
     },
     {
       "name": "Oct 2026 - Mechanical Intern",
+      "Applied": 15,
+      "Close Rate (%)": 0,
+      "HR Interview Done": 1,
+      "Interview Show Rate (%)": 100,
       "Month": "2026-10-01",
-      "Position": "Mechanical Intern"
+      "Offer Rate (%)": 0,
+      "Position": "Mechanical Intern",
+      "Reached Out": 1,
+      "Resume Screened": 15
     },
     {
       "name": "Oct 2026 - Electrical Intern",
+      "Applied": 7,
       "Month": "2026-10-01",
-      "Position": "Electrical Intern"
+      "Offer Rate (%)": 0,
+      "Position": "Electrical Intern",
+      "Resume Screened": 7
     },
     {
       "name": "Oct 2026 - Robotics Software Intern",
+      "Applied": 14,
       "Month": "2026-10-01",
-      "Position": "Software Intern"
+      "Offer Rate (%)": 0,
+      "Position": "Software Intern",
+      "Resume Screened": 14
     },
     {
       "name": "Oct 2026 - Fullstack Robotics Intern",
+      "Applied": 14,
+      "Close Rate (%)": 0,
+      "HR Interview Done": 1,
+      "Interview Show Rate (%)": 100,
       "Month": "2026-10-01",
-      "Position": "Fullstack Robotics Intern"
+      "Offer Rate (%)": 0,
+      "Position": "Fullstack Robotics Intern",
+      "Reached Out": 1,
+      "Resume Screened": 14
     },
     {
       "name": "Oct 2026 - PM Intern",
+      "Applied": 14,
+      "Close Rate (%)": 0,
+      "HR Interview Done": 2,
+      "Interview Show Rate (%)": 100,
       "Month": "2026-10-01",
-      "Position": "Project Management Intern"
+      "Offer Rate (%)": 0,
+      "Position": "Project Management Intern",
+      "Reached Out": 2,
+      "Resume Screened": 14
     },
     {
       "name": "Oct 2026 - Finance Intern",
+      "Applied": 12,
+      "Close Rate (%)": 0,
+      "HR Interview Done": 1,
+      "Interview Show Rate (%)": 50,
       "Month": "2026-10-01",
-      "Position": "Finance Intern"
+      "Offer Rate (%)": 0,
+      "Position": "Finance Intern",
+      "Reached Out": 2,
+      "Resume Screened": 2
     },
     {
       "name": "Oct 2026 - ID Intern",
+      "Applied": 6,
+      "Close Rate (%)": 0,
+      "HR Interview Done": 2,
+      "Interview Show Rate (%)": 50,
       "Month": "2026-10-01",
-      "Position": "Industrial Design Intern"
+      "Offer Rate (%)": 0,
+      "Position": "Industrial Design Intern",
+      "Reached Out": 4,
+      "Resume Screened": 6
     },
     {
       "name": "Oct 2026 - Robotics Technical Writer",
+      "Applied": 1,
+      "Close Rate (%)": 0,
+      "HR Interview Done": 2,
+      "Interview Show Rate (%)": 200,
       "Month": "2026-10-01",
-      "Position": "Robotics Technical Writer"
-    },
-    {
-      "name": "Oct 2026 - Ops Engineer",
-      "Month": "2026-10-01",
-      "Position": "Operations Engineer"
+      "Offer Rate (%)": 0,
+      "Position": "Robotics Technical Writer",
+      "Reached Out": 1,
+      "Resume Screened": 1,
+      "Technical Interview Scheduled": 1
     },
     {
       "name": "Sept 2026 - Ops Engineer",
